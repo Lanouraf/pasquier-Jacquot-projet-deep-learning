@@ -26,7 +26,7 @@ def main():
     -------
     None
     """
-    st.title("Some data manipulations")
+    st.title("manipulation de la batch normalization  et layer normalization")
 
     home_data = get_data()
 
@@ -65,11 +65,11 @@ def get_data():
 
     Notes
     -----
-    This is the dataset dowloaded from https://www.kaggle.com/competitions/home-data-for-ml-course/data.
+    This is the dataset dowloaded from https://www.kaggle.com/datasets/nelgiriyewithana/apple-quality.
 
     """
-    iowa_file_path = "./home-data-for-ml-course/train.csv"
-    home_data = pd.read_csv(iowa_file_path)
+    apple_quality_file_path = "/home/pasquier/Bureau/projet deep L /pasquier-Jacquot-projet-deep-learning/data/apple_quality /apple_quality.csv"
+    home_data = pd.read_csv(apple_quality_file_path)
     return home_data
 
 
