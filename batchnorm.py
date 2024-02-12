@@ -26,7 +26,7 @@ def main():
     -------
     None
     """
-     st.title("manipulation de la batchnormalization et de la layer normalization")
+    st.title("Some data manipulations")
 
     home_data = get_data()
 
@@ -51,6 +51,7 @@ def main():
     elif app_mode == "Show MNIST":
         mnist()
     elif app_mode == "Deep Learning":
+        fashionmnist()
 
 
 @st.cache
