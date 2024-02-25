@@ -49,6 +49,23 @@ def main():
 
 
 def get_data():
+    """Loads the home training data.
+
+    Returns
+    -------
+    home_data: pd.DataFrame
+        The home training data.
+
+    Notes
+    -----
+    This is the dataset dowloaded from https://www.kaggle.com/datasets/nelgiriyewithana/apple-quality.
+
+    """
+    apple_quality_file_path = "/home/pasquier/Bureau/projet deep L /pasquier-Jacquot-projet-deep-learning/data/apple_quality /apple_quality.csv"
+    home_data = pd.read_csv(apple_quality_file_path)
+    return home_data
+
+def get_data():
     """Loads the Apple Twitter sentiment texts data from Kaggle.
 
     Returns
@@ -56,22 +73,15 @@ def get_data():
     df: pd.DataFrame
         The Apple Twitter sentiment texts data.
 
+    Notes
+    -----
+    This is the dataset dowloaded from
+        "https://www.kaggle.com/datasets/seriousran/appletwittersentimenttexts/download?datasetVersionNumber=1"
+
     """
-    url = "https://www.kaggle.com/datasets/seriousran/appletwittersentimenttexts/download?datasetVersionNumber=1"
-    
-    # Télécharger le fichier CSV depuis l'URL
-    response = requests.get(url)
-    
-    # Vérifier si la requête a réussi
-    if response.status_code == 200:
-        # Lire le contenu du fichier CSV
-        content = response.content.decode("utf-8")
-        # Convertir le contenu en DataFrame pandas
-        df = pd.read_csv(StringIO(content))
-        return df
-    else:
-        print("Failed to download data.")
-        return None
+    directory = "/Users/maudjacquot/Desktop/pasquier-Jacquot-projet-deep-learning/apple-twitter-sentiment-texts.csv"
+    home_data = pd.read_csv(directoey)
+    return home_data
 
 if __name__ == "__main__":
     main()
