@@ -13,8 +13,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from torchvision.datasets import MNIST
 from torchvision.transforms import ToTensor
-from pathlib import Path
-from google_drive_downloader import GoogleDriveDownloader as gdd
 
 from viz import mnist_like_viz, training_curves
 import dl
@@ -54,32 +52,19 @@ def main():
     #elif app_mode == "Homemade Layer Normalization":
     #elif app_mode == "LN in ConvNets":
     #elif app_mode == "BN or LN":
-    
-        
+
 
 def get_data():
-    """Loads the home training data.
+    """Loads the home training data from Kaggle.
 
     Returns
     -------
     home_data: pd.DataFrame
         The home training data.
 
-    Notes
-    -----
-    This is the dataset dowloaded from https://www.kaggle.com/competitions/home-data-for-ml-course/data.
-
     """
-    DATA_PATH = 'data/imdb_reviews.csv'
-    if not Path(DATA_PATH).is_file():
-        gdd.download_file_from_google_drive(
-        file_id='1zfM5E6HvKIe7f3rEt1V2gBpw5QOSSKQz',
-        dest_path=DATA_PATH,)
-    #iowa_file_path = "./home-data-for-ml-course/train.csv"
-    #home_data = pd.read_csv(iowa_file_path)
-    DATA_PATH = 'data/imdb_reviews.csv'
-    df = pd.read_csv(DATA_PATH)
-    home_data = df
+    url = "https://www.kaggle.com/datasets/seriousran/appletwittersentimenttexts/download?datasetVersionNumber=1"
+    home_data = pd.read_csv(url)
     return home_data
 
 if __name__ == "__main__":
