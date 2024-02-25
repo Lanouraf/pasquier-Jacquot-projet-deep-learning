@@ -48,6 +48,7 @@ def main():
     #elif app_mode == "LN in ConvNets":
     #elif app_mode == "BN or LN":
 
+@st.cache
 def get_data():
     """Loads the Apple Twitter sentiment texts data from Kaggle.
 
