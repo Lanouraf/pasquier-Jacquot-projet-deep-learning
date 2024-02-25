@@ -49,25 +49,29 @@ def main():
 
 
 def get_data():
-    """Loads the home training data from Kaggle.
+    """Loads the Apple Twitter sentiment texts data from Kaggle.
 
     Returns
     -------
-    home_data: pd.DataFrame
-        The home training data.
+    df: pd.DataFrame
+        The Apple Twitter sentiment texts data.
 
     """
     url = "https://www.kaggle.com/datasets/seriousran/appletwittersentimenttexts/download?datasetVersionNumber=1"
     
-    # Télécharger le contenu du fichier zip depuis l'URL
+    # Télécharger le fichier CSV depuis l'URL
     response = requests.get(url)
-    zip_file = zipfile.ZipFile(io.BytesIO(response.content))
     
-    # Extraire le fichier CSV du zip
-    csv_filename = zip_file.namelist()[0]  # Nom du fichier CSV
-    with zip_file.open(csv_filename) as file:
-        df = pd.read_csv(file)
-    return df
+    # Vérifier si la requête a réussi
+    if response.status_code == 200:
+        # Lire le contenu du fichier CSV
+        content = response.content.decode("utf-8")
+        # Convertir le contenu en DataFrame pandas
+        df = pd.read_csv(StringIO(content))
+        return df
+    else:
+        print("Failed to download data.")
+        return None
 
 if __name__ == "__main__":
     main()
