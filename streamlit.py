@@ -1,7 +1,6 @@
 #streamlit
 
 import os
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -80,7 +79,7 @@ def get_data():
 
     """
     directory = "/Users/maudjacquot/Desktop/pasquier-Jacquot-projet-deep-learning/apple-twitter-sentiment-texts.csv"
-    home_data = pd.read_csv(directoey)
+    home_data = pd.read_csv(directory)
     return home_data
 
 if __name__ == "__main__":
