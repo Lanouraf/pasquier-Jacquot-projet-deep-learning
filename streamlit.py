@@ -46,24 +46,6 @@ def main():
     #elif app_mode == "LN in ConvNets":
     #elif app_mode == "BN or LN":
 
-
-def get_data():
-    """Loads the home training data.
-
-    Returns
-    -------
-    home_data: pd.DataFrame
-        The home training data.
-
-    Notes
-    -----
-    This is the dataset dowloaded from https://www.kaggle.com/datasets/nelgiriyewithana/apple-quality.
-
-    """
-    apple_quality_file_path = "/home/pasquier/Bureau/projet deep L /pasquier-Jacquot-projet-deep-learning/data/apple_quality /apple_quality.csv"
-    home_data = pd.read_csv(apple_quality_file_path)
-    return home_data
-
 def get_data():
     """Loads the Apple Twitter sentiment texts data from Kaggle.
 
