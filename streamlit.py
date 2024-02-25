@@ -37,8 +37,10 @@ def main():
             "BN or LN"
         ],
     )  # , "Show the source code"])
-    if app_mode == "Homemade Layer Normalization":
+    if app_mode == "Home":
         st.write("To continue select a mode in the selection box to the left.")
+    elif app_mode == "Homemade Layer Normalization":
+
     #elif app_mode == "Internal Covariate Shift": 
     #elif app_mode == "BN Avantages":     
     #elif app_mode == "BN before or after activation":   
@@ -63,6 +65,14 @@ def get_data():
     directory = "/Users/maudjacquot/Desktop/pasquier-Jacquot-projet-deep-learning/apple-twitter-sentiment-texts.csv"
     home_data = pd.read_csv(directory)
     return home_data
+
+def homemade_layernorm(home_data):
+    st.text(
+        "This is the head of the dataframe"
+    )
+    st.write(home_data.head())
+
+
 
 if __name__ == "__main__":
     main()
