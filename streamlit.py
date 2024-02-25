@@ -40,6 +40,7 @@ def main():
     if app_mode == "Home":
         st.write("To continue select a mode in the selection box to the left.")
     elif app_mode == "Homemade Layer Normalization":
+        homemade_layernorm(home_data)
 
     #elif app_mode == "Internal Covariate Shift": 
     #elif app_mode == "BN Avantages":     
