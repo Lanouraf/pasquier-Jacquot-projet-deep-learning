@@ -64,8 +64,16 @@ def get_data():
 
     """
     url = "https://www.kaggle.com/datasets/seriousran/appletwittersentimenttexts/download?datasetVersionNumber=1"
-    home_data = pd.read_csv(url)
-    return home_data
+    
+    # Télécharger le contenu du fichier zip depuis l'URL
+    response = requests.get(url)
+    zip_file = zipfile.ZipFile(io.BytesIO(response.content))
+    
+    # Extraire le fichier CSV du zip
+    csv_filename = zip_file.namelist()[0]  # Nom du fichier CSV
+    with zip_file.open(csv_filename) as file:
+        df = pd.read_csv(file)
+    return df
 
 if __name__ == "__main__":
     main()
