@@ -77,6 +77,8 @@ def homemade_layernorm(home_data):
     )
     st.write(home_data.head())
 
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
     class Sequences(Dataset):
         def __init__(self, home_data, vectorizer):
             ### create tokens for your dataset
