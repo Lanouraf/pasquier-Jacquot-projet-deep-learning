@@ -84,6 +84,17 @@ def get_data():
     return home_data
 
 def homemade_layernorm(home_data):
+    def remove_chars():
+        pattern = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+|#[a-zA-Z]+|$[a-zA-Z]+|@[a-zA-Z]+|[,.^_$*%-;鶯!?:]')
+        for i in range(len(home_data["text"])):
+            home_data["text"][i] = pattern.sub('', home_data["text"][i])
+    remove_chars()
+
+    stop = stopwords.words('english')
+    home_data["text"] = home_data["text"].str.lower().str.split()
+    home_data["text"] = home_data["text"].apply(lambda x: [item for item in x if item not in stop])
+
+
     st.text(
         "This is the head of the dataframe where text contains Apple Twitter texts and sentiment contains -1, 0 or 1 corresponding to negative, neutral or positive"
     )
