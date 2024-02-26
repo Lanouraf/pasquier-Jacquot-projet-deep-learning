@@ -218,7 +218,7 @@ def homemade_layernorm(home_data):
     model.train()
     train_losses = []
     for epoch in range(10):
-        progress_bar = tqdm.notebook.tqdm(train_loader, leave=False)
+        progress_bar = tqdm(train_loader, leave=False)
         losses = []
         total = 0
         for inputs, target in progress_bar:
@@ -244,7 +244,7 @@ def homemade_layernorm(home_data):
     model2.train()
     train2_losses = []
     for epoch in range(10):
-        progress_bar = tqdm.notebook.tqdm(train_loader, leave=False)
+        progress_bar = tqdm(train_loader, leave=False)
         losses = []
         total = 0
         for inputs, target in progress_bar:
