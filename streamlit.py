@@ -197,7 +197,7 @@ def homemade_layernorm(home_data):
 
             num_examples += targets.size(0)
             correct_pred += (predicted_labels == targets).sum()
-    st.text("Accuracy: "
+    st.text("Accuracy: ")
     st.write(np.round(float((correct_pred.float()/num_examples)),4) * 100)
 
     
