@@ -5,6 +5,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as pl
+import torch
 from torch.utils.data import DataLoader, Dataset
 from sklearn.feature_extraction.text import CountVectorizer
 import torch.nn as nn
