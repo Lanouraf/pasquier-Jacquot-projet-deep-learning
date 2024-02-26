@@ -207,6 +207,12 @@ def homemade_layernorm(home_data):
         epoch_loss = sum(losses) / total
         train_losses.append(epoch_loss)
 
+    def weights_init(m):
+        if isinstance(m, nn.Linear):
+            nn.init.xavier_uniform_(m.weight)
+            nn.init.constant_(m.bias, 0)
+    model2.apply(weights_init)
+
     model2.train()
     train2_losses = []
     for epoch in range(10):
