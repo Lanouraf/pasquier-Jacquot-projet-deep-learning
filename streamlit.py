@@ -179,7 +179,7 @@ def homemade_layernorm(home_data):
             # Backpropagation
             loss.backward()
             optimizer.step()
-            progress_bar.set_description(f'Loss: {loss.item():.3f}')
+            #progress_bar.set_description(f'Loss: {loss.item():.3f}')
 
             losses.append(loss.item())
             total += 1
