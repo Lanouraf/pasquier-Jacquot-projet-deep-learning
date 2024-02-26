@@ -77,19 +77,19 @@ def homemade_layernorm(home_data):
     st.write(home_data.head())
 
     class Sequences(Dataset):
-        def __init__(self, df, vectorizer):
+        def __init__(self, home_data, vectorizer):
             ### create tokens for your dataset
             self.vectorizer = vectorizer
-            # Create a list containing all the reviews from df
-            list_reviews = df.review.tolist()
+            # Create a list containing all the texts from df
+            list_texts = home_data.text.tolist()
             # Generate your sequences using your vectorizer
-            self.sequences = self.vectorizer.transform(list_reviews)
+            self.sequences = self.vectorizer.transform(list_texts)
             ###
             # We convert the labels to a list of labels (before it was within a dataframe)
-            self.labels = df.label.tolist()
+            self.labels = home_data.label.tolist()
 
         def __getitem__(self, i):
-            ### TODO: self.sequences is a sparse matrix, where the rows contain the reviews and the columns the unique words within the dataset
+            ### TODO: self.sequences is a sparse matrix, where the rows contain the texts and the columns the unique words within the dataset
             # Select the sequence at the index i
             sequence_i = self.sequences[i]
             # Select the label at the index i
@@ -101,11 +101,11 @@ def homemade_layernorm(home_data):
         def __len__(self):
             return self.sequences.shape[0]
         # Create your vectorizer
-    vectorizer = CountVectorizer(stop_words="english",max_df=0.99, min_df=0.005)
-    # Create a list containing all the reviews from df
-    list_reviews = home_data.review.tolist()
+    vectorizer = CountVectorizer(stop_words="english",max_home_data=0.99, min_home_data=0.005)
+    # Create a list containing all the texts from df
+    list_texts = home_data.text.tolist()
     # Fit your vectorizer on this list
-    vectorizer.fit(list_reviews)
+    vectorizer.fit(list_texts)
     ###
 
     # We divide the dataset into a train and a test set
