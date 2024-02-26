@@ -177,7 +177,7 @@ def homemade_layernorm(home_data):
     
     class BagOfWordsClassifierLayerNorm(nn.Module):
         def __init__(self, vocab_size, hidden1, hidden2, out_shape):
-            super(BagOfWordsClassifier, self).__init__()
+            super(BagOfWordsClassifierLayerNorm, self).__init__()
             self.layer1 = nn.Sequential(
                 nn.Linear(vocab_size,hidden1),
                 LayerNorm(hidden1),
