@@ -100,8 +100,9 @@ def homemade_layernorm(home_data):
 
         def __len__(self):
             return self.sequences.shape[0]
-        # Create your vectorizer
-    vectorizer = CountVectorizer(stop_words="english",max_home_data=0.99, min_home_data=0.005)
+        
+    # Create your vectorizer
+    vectorizer = CountVectorizer(stop_words="english", max_df=0.99, min_df=0.005)
     # Create a list containing all the texts from df
     list_texts = home_data.text.tolist()
     # Fit your vectorizer on this list
