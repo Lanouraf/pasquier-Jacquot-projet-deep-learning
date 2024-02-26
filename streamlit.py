@@ -29,7 +29,7 @@ def main():
     app_mode = st.sidebar.selectbox(
         "Choose the experiment",
         [
-            "Home"
+            "Home",
             "Homemade Batch Normalization",
             "Internal Covariate Shift",
             "BN Avantages",
@@ -86,17 +86,17 @@ def homemade_layernorm(home_data):
             self.sequences = self.vectorizer.transform(list_texts)
             ###
             # We convert the labels to a list of labels (before it was within a dataframe)
-            self.labels = home_data.label.tolist()
+            self.sentiments = home_data.sentiment.tolist()
 
         def __getitem__(self, i):
             ### TODO: self.sequences is a sparse matrix, where the rows contain the texts and the columns the unique words within the dataset
             # Select the sequence at the index i
             sequence_i = self.sequences[i]
             # Select the label at the index i
-            label_i = self.labels[i]
+            sentiment_i = self.sentiments[i]
             ###
             # We return here the sequence and the label at the index i. We convert the sparse matrix to a numpy array.
-            return sequence_i.toarray(), label_i
+            return sequence_i.toarray(), sentiment_i
 
         def __len__(self):
             return self.sequences.shape[0]
@@ -192,12 +192,12 @@ def homemade_layernorm(home_data):
             targets = targets.float().to(device)
 
             logits = model(features.squeeze().float())
-            ### TODO: compute the predicted labels
-            predicted_labels = torch.round(logits)
+            ### TODO: compute the predicted sentiments
+            predicted_sentiments = torch.round(logits)
             ###
 
             num_examples += targets.size(0)
-            correct_pred += (predicted_labels == targets).sum()
+            correct_pred += (predicted_sentiments == targets).sum()
     st.text("Accuracy: ")
     st.write(np.round(float((correct_pred.float()/num_examples)),4) * 100)
 
