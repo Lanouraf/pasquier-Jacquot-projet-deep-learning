@@ -11,6 +11,18 @@ from sklearn.feature_extraction.text import CountVectorizer
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm, tqdm_notebook
+import os
+import sys
+
+# Importez d'autres bibliothèques nécessaires
+
+# Ajoutez ce bloc au début de votre code
+class NullWriter(object):
+    def write(self, arg):
+        pass
+
+# Redirigez la sortie standard vers os.devnull
+sys.stdout = NullWriter()
 
 def main():
     """The main function of the app.
