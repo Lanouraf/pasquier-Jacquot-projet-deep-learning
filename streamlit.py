@@ -85,7 +85,7 @@ def get_data():
 
 def homemade_layernorm(home_data):
     st.text(
-        "This is the head of the dataframe where text contains Apple Twitter texts and sentiment contains -1, 0 or 1 correspoding to negative, neutral or positive"
+        "This is the head of the dataframe where text contains Apple Twitter texts and sentiment contains -1, 0 or 1 corresponding to negative, neutral or positive"
     )
     st.write(home_data.head())
 
@@ -93,75 +93,52 @@ def homemade_layernorm(home_data):
 
     class Sequences(Dataset):
         def __init__(self, home_data, vectorizer):
-            ### create tokens for your dataset
             self.vectorizer = vectorizer
-            # Create a list containing all the texts from df
             list_texts = home_data.text.tolist()
-            # Generate your sequences using your vectorizer
             self.sequences = self.vectorizer.transform(list_texts)
-            ###
-            # We convert the labels to a list of labels (before it was within a dataframe)
             self.sentiments = home_data.sentiment.tolist()
 
         def __getitem__(self, i):
-            ### TODO: self.sequences is a sparse matrix, where the rows contain the texts and the columns the unique words within the dataset
-            # Select the sequence at the index i
             sequence_i = self.sequences[i]
-            # Select the label at the index i
             sentiment_i = self.sentiments[i]
-            ###
-            # We return here the sequence and the label at the index i. We convert the sparse matrix to a numpy array.
             return sequence_i.toarray(), sentiment_i
 
         def __len__(self):
             return self.sequences.shape[0]
         
-    # Create your vectorizer
     vectorizer = CountVectorizer(stop_words="english", max_df=0.99, min_df=0.005)
-    # Create a list containing all the texts from df
     list_texts = home_data.text.tolist()
-    # Fit your vectorizer on this list
     vectorizer.fit(list_texts)
-    ###
 
-    # We divide the dataset into a train and a test set
-    train_home_data= home_data.iloc[:int(0.7*home_data.shape[0])]
+    train_home_data = home_data.iloc[:int(0.7*home_data.shape[0])]
     test_home_data = home_data.iloc[int(0.7*home_data.shape[0]):]
 
-    ### TODO: create a train and a test Sequences datasets
     train_dataset = Sequences(train_home_data, vectorizer)
     test_dataset = Sequences(test_home_data, vectorizer)
-    # Create the associated DataLoaders, with a batch size of 4096
-    train_loader = DataLoader(dataset=train_dataset,batch_size=4096)
-    test_loader = DataLoader(dataset=test_dataset,batch_size=4096)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=4096)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=4096)
 
-    
     class BagOfWordsClassifier(nn.Module):
-        ### TODO: implement your model with three hidden layers
         def __init__(self, vocab_size, hidden1, hidden2, out_shape):
             super(BagOfWordsClassifier, self).__init__()
             self.layer1 = nn.Sequential(
-                nn.Linear(vocab_size,hidden1),
+                nn.Linear(vocab_size, hidden1),
                 nn.ReLU()
             )
             self.layer2 = nn.Sequential(
-                nn.Linear(hidden1,hidden2),
+                nn.Linear(hidden1, hidden2),
                 nn.ReLU()
             )
             self.layer3 = nn.Sequential(
-                nn.Linear(hidden2,out_shape),
+                nn.Linear(hidden2, out_shape),
             )
         def forward(self, x):
-            ### TODO
-
             x = self.layer1(x)
             x = self.layer2(x)
             x = self.layer3(x)
             x = x.squeeze()
             x = nn.Sigmoid()(x)
-
             return x
-    ###
     
     class LayerNorm(nn.Module):
         def __init__(self, features, eps=1e-6):
@@ -179,17 +156,17 @@ def homemade_layernorm(home_data):
         def __init__(self, vocab_size, hidden1, hidden2, out_shape):
             super(BagOfWordsClassifierLayerNorm, self).__init__()
             self.layer1 = nn.Sequential(
-                nn.Linear(vocab_size,hidden1),
+                nn.Linear(vocab_size, hidden1),
                 LayerNorm(hidden1),
                 nn.ReLU()
             )
             self.layer2 = nn.Sequential(
-                nn.Linear(hidden1,hidden2),
+                nn.Linear(hidden1, hidden2),
                 LayerNorm(hidden2),
                 nn.ReLU()
             )
             self.layer3 = nn.Sequential(
-                nn.Linear(hidden2,out_shape),
+                nn.Linear(hidden2, out_shape),
             )
 
         def forward(self, x):
@@ -200,20 +177,16 @@ def homemade_layernorm(home_data):
             x = nn.Sigmoid()(x)
             return x
     
-
-
-
-    vocab_size=len(train_dataset.vectorizer.vocabulary_)
-    hidden1=128
-    hidden2=64
-    output_shape=1
-    model=BagOfWordsClassifier(vocab_size, hidden1,hidden2,output_shape)
-    model2=BagOfWordsClassifierLayerNorm(vocab_size, hidden1,hidden2,output_shape)
+    vocab_size = len(train_dataset.vectorizer.vocabulary_)
+    hidden1 = 128
+    hidden2 = 64
+    output_shape = 1
+    model = BagOfWordsClassifier(vocab_size, hidden1, hidden2, output_shape)
+    model2 = BagOfWordsClassifierLayerNorm(vocab_size, hidden1, hidden2, output_shape)
 
     criterion = nn.BCELoss()
-    optimizer = optim.Adam(model.parameters(), lr = 0.001)
-    optimizer2 = optim.Adam(model2.parameters(), lr = 0.001)
-    ###
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer2 = optim.Adam(model2.parameters(), lr=0.001)
 
     model.train()
     train_losses = []
@@ -222,22 +195,15 @@ def homemade_layernorm(home_data):
         losses = []
         total = 0
         for inputs, target in progress_bar:
-            # Inputs are of shape (bs, 1, voc size), we remove the 1 with squeeze() and we convert them to floats
             inputs = inputs.squeeze().float()
             targets = target.float()
-            ### TODO: implement the training loop as usual.
-            ###
             optimizer.zero_grad()
             pred = model(inputs)
             loss = criterion(pred, targets)
-            # Backpropagation
             loss.backward()
             optimizer.step()
-            #progress_bar.set_description(f'Loss: {loss.item():.3f}')
-
             losses.append(loss.item())
             total += 1
-
         epoch_loss = sum(losses) / total
         train_losses.append(epoch_loss)
 
@@ -248,22 +214,15 @@ def homemade_layernorm(home_data):
         losses = []
         total = 0
         for inputs, target in progress_bar:
-            # Inputs are of shape (bs, 1, voc size), we remove the 1 with squeeze() and we convert them to floats
             inputs = inputs.squeeze().float()
             targets = target.float()
-            ### TODO: implement the training loop as usual.
-            ###
             optimizer2.zero_grad()
-            pred = model(inputs)
+            pred = model2(inputs)
             loss = criterion(pred, targets)
-            # Backpropagation
             loss.backward()
             optimizer2.step()
-            #progress_bar.set_description(f'Loss: {loss.item():.3f}')
-
             losses.append(loss.item())
             total += 1
-
         epoch_loss = sum(losses) / total
         train2_losses.append(epoch_loss)
 
@@ -297,7 +256,7 @@ def homemade_layernorm(home_data):
 
             num_examples += targets.size(0)
             correct_pred += (predicted_sentiments == targets).sum()
-    st.text("Accuracy with Layer Norm: ")
+    st.text("Accuracy with Homemade Layer Norm: ")
     st.write(np.round(float((correct_pred.float()/num_examples)),4) * 100)
 
     
