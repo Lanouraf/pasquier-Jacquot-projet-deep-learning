@@ -168,6 +168,31 @@ def homemade_layernorm(home_data):
             x = x.squeeze()
             x = nn.Sigmoid()(x)
             return x
+        
+    class BagOfWordsClassifierLayer(nn.Module):
+        def __init__(self, vocab_size, hidden1, hidden2, out_shape):
+            super(BagOfWordsClassifierLayer, self).__init__()
+            self.layer1 = nn.Sequential(
+                nn.Linear(vocab_size, hidden1),
+                nn.LayerNorm(hidden1),  # Utilisation de torch.nn.LayerNorm
+                nn.ReLU()
+            )
+            self.layer2 = nn.Sequential(
+                nn.Linear(hidden1, hidden2),
+                nn.LayerNorm(hidden2),  # Utilisation de torch.nn.LayerNorm
+                nn.ReLU()
+            )
+            self.layer3 = nn.Sequential(
+                nn.Linear(hidden2, out_shape),
+            )
+
+        def forward(self, x):
+            x = self.layer1(x)
+            x = self.layer2(x)
+            x = self.layer3(x)
+            x = x.squeeze()
+            x = nn.Sigmoid()(x)
+            return x
     
     vocab_size = len(train_dataset.vectorizer.vocabulary_)
     hidden1 = 128
@@ -175,10 +200,12 @@ def homemade_layernorm(home_data):
     output_shape = 1
     model = BagOfWordsClassifier(vocab_size, hidden1, hidden2, output_shape)
     model2 = BagOfWordsClassifierLayerNorm(vocab_size, hidden1, hidden2, output_shape)
+    model3 = BagOfWordsClassifierLayer(vocab_size, hidden1, hidden2, output_shape)
 
     criterion = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     optimizer2 = optim.Adam(model2.parameters(), lr=0.001)
+    optimizer3 = optim.Adam(model3.parameters(), lr=0.001)
 
     model.train()
     train_losses = []
@@ -224,6 +251,25 @@ def homemade_layernorm(home_data):
         epoch_loss = sum(losses) / total
         train2_losses.append(epoch_loss)
 
+    model3.train()
+    train3_losses = []
+    for epoch in range(10):
+        progress_bar = tqdm(train_loader, leave=False)
+        losses = []
+        total = 0
+        for inputs, target in progress_bar:
+            inputs = inputs.squeeze().float()
+            targets = target.float()
+            optimizer3.zero_grad()
+            pred = model2(inputs)
+            loss = criterion(pred, targets)
+            loss.backward()
+            optimizer3.step()
+            losses.append(loss.item())
+            total += 1
+        epoch_loss = sum(losses) / total
+        train3_losses.append(epoch_loss)
+
     #st.write(train_losses)
     with torch.no_grad():
         correct_pred, num_examples = 0, 0
@@ -255,6 +301,22 @@ def homemade_layernorm(home_data):
             num_examples += targets.size(0)
             correct_pred += (predicted_sentiments == targets).sum()
     st.text("Accuracy with Homemade Layer Norm: ")
+    st.write(np.round(float((correct_pred.float()/num_examples)),4) * 100)
+
+    with torch.no_grad():
+        correct_pred, num_examples = 0, 0
+        for i, (features, targets) in enumerate(test_loader):
+            features = features.to(device)
+            targets = targets.float().to(device)
+
+            logits = model3(features.squeeze().float())
+            ### TODO: compute the predicted sentiments
+            predicted_sentiments = torch.round(logits)
+            ###
+
+            num_examples += targets.size(0)
+            correct_pred += (predicted_sentiments == targets).sum()
+    st.text("Accuracy with Layer Norm: ")
     st.write(np.round(float((correct_pred.float()/num_examples)),4) * 100)
 
     
