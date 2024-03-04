@@ -29,6 +29,7 @@ def main():
     st.title("Batch and Layer Normalization")
 
     home_data = get_data()
+    home_data2 = get_data2()
 
     app_mode = st.sidebar.selectbox(
         "Choose the experiment",
@@ -51,7 +52,9 @@ def main():
     #elif app_mode == "Internal Covariate Shift": 
     #elif app_mode == "BN Avantages":     
     #elif app_mode == "BN before or after activation":   
-    #elif app_mode == "Homemade Layer Normalization":
+    elif app_mode == "Homemade Batch Normalization":
+        homemade_batchnorm(home_data2)
+
     #elif app_mode == "LN in ConvNets":
     #elif app_mode == "BN or LN":
 
@@ -76,7 +79,7 @@ def get_data():
 
 
 
-@st.cache
+@st.cache_data
 def get_data2():
     """Loads the Apple quality data from Kaggle.
 
@@ -92,8 +95,8 @@ def get_data2():
 
     """
     directory = "apple_quality.csv"
-    home_data = pd.read_csv(directory)
-    return home_data
+    home_data2 = pd.read_csv(directory)
+    return home_data2
 
 def homemade_layernorm(home_data):
 
@@ -341,6 +344,14 @@ def homemade_layernorm(home_data):
     st.write(np.round(float((correct_pred.float()/num_examples)),4) * 100)
 
     
+def homemade_batchnorm(home_data2):
+
+    st.text(
+        "This is the head of the dataframe of the apple quality, it contains different covariables decribing the quality of an apple and giving it a rating ,good or bad"
+    )
+    st.write(home_data2.head())
+
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
 
