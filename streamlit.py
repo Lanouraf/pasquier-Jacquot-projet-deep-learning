@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm, tqdm_notebook
+from sklearn.model_selection import train_test_split
 import os
 import sys
 
@@ -24,7 +25,7 @@ def main():
 
     Returns
     -------
-    None
+    Nonest.cache
     """
     st.title("Batch and Layer Normalization")
 
@@ -346,12 +347,40 @@ def homemade_layernorm(home_data):
     
 def homemade_batchnorm(home_data2):
 
+
+
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+    features = [
+        "Weight",
+        "Sweetness",
+        "Crunchiness",
+        "Juiciness",
+        "Ripeness",
+        "Acidity"
+    ]
+    home_data_extracted = home_data2[["Quality"] + features]
+    X = home_data2[features]
+    home_data2['Quality'] = pd.factorize(home_data2['Quality'])[0]
+    y = home_data2[['Quality']].values
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=1)
+
     st.text(
         "This is the head of the dataframe of the apple quality, it contains different covariables decribing the quality of an apple and giving it a rating ,good or bad"
     )
-    st.write(home_data2.head())
+    st.write(home_data_extracted.head())
 
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    # Create X
+    covariates = st.multiselect(
+        "Select covariates to keep for the training:", features, features
+    )
+    ### standardize data between 0 and 1
+    x_min = X_train.min()
+    x_max = X_train.max()
+
+    X_train = (X_train - x_min)/(x_max - x_min)
+
+    X_test = (X_test - x_min)/(x_max - x_min)
 
 
 
